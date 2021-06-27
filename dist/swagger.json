@@ -1,0 +1,418 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"_LeanDocument__LeanDocument_T__": {
+				"properties": {},
+				"type": "object"
+			},
+			"Pick__LeanDocument_T_.Exclude_keyof_LeanDocument_T_.Exclude_keyofDocument._id-or-id-or-__v_-or-%24isSingleNested__": {
+				"properties": {
+					"_id": {
+						"$ref": "#/components/schemas/_LeanDocument__LeanDocument_T__",
+						"description": "This documents _id."
+					},
+					"__v": {
+						"description": "This documents __v."
+					},
+					"id": {
+						"description": "The string version of this documents _id."
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit__LeanDocument_this_.Exclude_keyofDocument._id-or-id-or-__v_-or-%24isSingleNested_": {
+				"$ref": "#/components/schemas/Pick__LeanDocument_T_.Exclude_keyof_LeanDocument_T_.Exclude_keyofDocument._id-or-id-or-__v_-or-%24isSingleNested__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"LeanDocument_this_": {
+				"$ref": "#/components/schemas/Omit__LeanDocument_this_.Exclude_keyofDocument._id-or-id-or-__v_-or-%24isSingleNested_"
+			},
+			"ISentMailDocument": {
+				"$ref": "#/components/schemas/LeanDocument_this_"
+			},
+			"RecurringEnum": {
+				"enum": [
+					"seconds",
+					"weekly",
+					"monthly",
+					"yearly"
+				],
+				"type": "string"
+			},
+			"IRecurrence": {
+				"properties": {
+					"type": {
+						"$ref": "#/components/schemas/RecurringEnum"
+					},
+					"afterSeconds": {
+						"type": "number",
+						"format": "double"
+					},
+					"day": {
+						"type": "number",
+						"format": "double"
+					},
+					"date": {
+						"type": "number",
+						"format": "double"
+					},
+					"month": {
+						"type": "number",
+						"format": "double"
+					},
+					"time": {
+						"type": "string"
+					},
+					"year": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IMail": {
+				"properties": {
+					"to": {
+						"type": "string"
+					},
+					"cc": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"subject": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"recurrence": {
+						"$ref": "#/components/schemas/IRecurrence"
+					},
+					"createdBy": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"to",
+					"cc",
+					"subject",
+					"body",
+					"recurrence"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IMailDocument": {
+				"$ref": "#/components/schemas/LeanDocument_this_"
+			},
+			"IUser": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"googleId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"username"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IAccessTokenSuccess": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/IUser"
+					},
+					"accessToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user",
+					"accessToken"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"info": {
+		"title": "server",
+		"version": "1.0.0",
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/mail": {
+			"post": {
+				"operationId": "CreateMail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ISentMailDocument"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Mail"
+				],
+				"security": [
+					{
+						"auth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IMail"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/mail/sent": {
+			"get": {
+				"operationId": "SentMails",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ISentMailDocument"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Mail"
+				],
+				"security": [
+					{
+						"auth": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/mail/scheduled": {
+			"get": {
+				"operationId": "ScheduledMails",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IMailDocument"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Mail"
+				],
+				"security": [
+					{
+						"auth": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/user/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IAccessTokenSuccess"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IUser"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IAccessTokenSuccess"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IUser"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/google-login": {
+			"post": {
+				"operationId": "GoogleLogin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IAccessTokenSuccess"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/v1"
+		}
+	]
+}
