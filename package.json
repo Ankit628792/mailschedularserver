@@ -7,12 +7,13 @@
     "build:watch": "run-when-changed --watch \"./src/**/!(routes.ts)\" --exec \"npm run build\" -d 2000",
     "predev": "npm run tsoa",
     "dev": "concurrently --kill-others \"npm run tsoa:watch\" \"ts-node-dev --inspect=127.0.0.1:9229 src/index.ts\"",
-    "start": "node dist/index.js",
+    "start": "ts-node src/index.ts",
     "test": "jest --config package.json",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "coverage": "npm run test -- --coverage",
     "tsoa": "tsoa swagger && tsoa routes",
-    "tsoa:watch": "run-when-changed --watch \"./src/controllers/**/*.ts\" --exec \"npm run tsoa\" -d 2000"
+    "tsoa:watch": "run-when-changed --watch \"./src/controllers/**/*.ts\" --exec \"npm run tsoa\" -d 2000",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },
   "dependencies": {
     "api-error-handler": "^1.0.0",
@@ -91,5 +92,12 @@
         "ignoreCoverageForAllDecorators": true
       }
     }
-  }
+  },
+  "description": "mailschedular",
+  "main": "src/index.ts",
+  "keywords": [
+    "mail"
+  ],
+  "author": "",
+  "license": "ISC"
 }
